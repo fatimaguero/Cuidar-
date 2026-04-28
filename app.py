@@ -5,39 +5,42 @@ import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO CORRIGIDO (MOBILE + IOS + MENU VISÍVEL) ----------------
+# ---------------- ESTILO FINAL CORRIGIDO (iOS + Safari + Streamlit UI) ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* FORÇA TEMA CLARO GLOBAL */
+/* FORÇA MODO CLARO GLOBAL */
 :root {
     color-scheme: light !important;
 }
 
-/* FUNDO APP */
+/* FUNDO PRINCIPAL */
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif;
     background-color: #F4F9F6 !important;
     color: #000000 !important;
 }
 
-/* EVITA TEXTO SUMIR NO iOS */
+/* 🔥 CORREÇÃO DEFINITIVA IOS (impede texto sumir) */
 * {
-    -webkit-text-fill-color: unset;
-}
-
-/* TEXTOS SEMPRE VISÍVEIS */
-h1,h2,h3,h4,h5,h6,p,span,label,div {
     color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }
 
-/* ESCONDER UI STREAMLIT */
+/* CONTAINERS STREAMLIT */
+[data-testid="stAppViewContainer"],
+[data-testid="stSidebar"],
+[data-testid="stHeader"] {
+    background-color: #F4F9F6 !important;
+}
+
+/* ESCONDER UI */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-/* LAYOUT MOBILE */
+/* LAYOUT */
 .block-container {
     padding: 1rem !important;
 }
@@ -57,8 +60,15 @@ header {visibility: hidden;}
 }
 
 /* STATUS */
-.status-ok { color:#2ECC71 !important; font-weight:bold; }
-.status-alerta { color:#E74C3C !important; font-weight:bold; }
+.status-ok {
+    color: #2ECC71 !important;
+    font-weight: bold;
+}
+
+.status-alerta {
+    color: #E74C3C !important;
+    font-weight: bold;
+}
 
 /* BOTÃO */
 .stButton>button {
@@ -67,6 +77,17 @@ header {visibility: hidden;}
     border-radius: 20px;
     border: none;
     padding: 10px 20px;
+}
+
+/* SELECTBOX (CORREÇÃO DO "MENU SUMIDO") */
+div[data-baseweb="select"] * {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+}
+
+/* LISTA DROPDOWN */
+ul, li {
+    color: #000000 !important;
 }
 
 /* RELÓGIO */
@@ -83,7 +104,7 @@ header {visibility: hidden;}
     background: black;
     border-radius: 20px;
     height: 100%;
-    color: white;
+    color: white !important;
     text-align: center;
     padding-top: 20px;
 }
@@ -97,7 +118,7 @@ header {visibility: hidden;}
 
 .sos-btn {
     background:#E74C3C;
-    color:white;
+    color:white !important;
     border-radius:50%;
     width:80px;
     height:80px;
@@ -105,33 +126,6 @@ header {visibility: hidden;}
     margin:10px auto;
     font-weight:bold;
 }
-
-/* ---------------- CORREÇÃO DO MENU (SUMIU NO CELULAR) ---------------- */
-
-/* força selectbox visível */
-div[data-baseweb="select"] {
-    background-color: #ffffff !important;
-}
-
-div[data-baseweb="select"] * {
-    color: #000000 !important;
-}
-
-/* texto interno do select */
-[data-testid="stSelectbox"] label {
-    color: #000000 !important;
-}
-
-/* lista dropdown */
-li {
-    color: #000000 !important;
-}
-
-/* garante visibilidade total */
-.stSelectbox div, .stSelectbox span {
-    color: #000000 !important;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -141,11 +135,7 @@ st.markdown("""
 <p style='text-align:center; color:#666;'>Monitoramento inteligente para quem você ama ❤️</p>
 """, unsafe_allow_html=True)
 
-# MENU (agora corrigido)
-menu = st.selectbox(
-    "",
-    ["Dashboard", "Monitorados", "Emergência", "Histórico"]
-)
+menu = st.selectbox("", ["Dashboard", "Monitorados", "Emergência", "Histórico"])
 
 # ---------------- BANCO ----------------
 if "pessoas" not in st.session_state:
