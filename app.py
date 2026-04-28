@@ -5,60 +5,34 @@ import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO FINAL CORRIGIDO (iOS + Safari + Streamlit UI) ----------------
+# ---------------- ESTILO FINAL (CORRIGIDO DE VERDADE) ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* FORÇA MODO CLARO GLOBAL */
+/* BASE */
 :root {
     color-scheme: light !important;
 }
 
-/* FUNDO PRINCIPAL */
+/* FUNDO */
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif;
     background-color: #F4F9F6 !important;
-    color: #000000 !important;
+    color: #111 !important;
 }
 
-/* 🔥 CORREÇÃO DEFINITIVA IOS (impede texto sumir) */
-/* COR GLOBAL SEGURA (sem quebrar Streamlit) */
+/* TEXTO GLOBAL SEM QUEBRAR COMPONENTES */
 body, p, span, label, h1, h2, h3, h4, h5, h6 {
-    color: #111111 !important;
-    -webkit-text-fill-color: #111111;
+    color: #111 !important;
 }
 
-/* CONTAINER PRINCIPAL */
+/* CONTAINER APP */
 [data-testid="stAppViewContainer"] {
     background-color: #F4F9F6 !important;
-    color: #111111 !important;
 }
 
-/* SELECTBOX (CORRIGE MENU PRETO INVISÍVEL) */
-div[data-baseweb="select"] * {
-    color: #111111 !important;
-    background-color: #ffffff !important;
-}
-
-/* DROPDOWN LIST */
-ul, li {
-    color: #111111 !important;
-}
-
-/* CARD GARANTIDO LEGÍVEL */
-.card, .card * {
-    color: #111111 !important;
-}
-
-/* CONTAINERS STREAMLIT */
-[data-testid="stAppViewContainer"],
-[data-testid="stSidebar"],
-[data-testid="stHeader"] {
-    background-color: #F4F9F6 !important;
-}
-
-/* ESCONDER UI */
+/* ESCONDER UI STREAMLIT */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
@@ -68,18 +42,18 @@ header {visibility: hidden;}
     padding: 1rem !important;
 }
 
-/* CARD */
+/* ---------------- CARD ---------------- */
 .card {
     background: #ffffff !important;
     padding: 18px;
     border-radius: 18px;
     box-shadow: 0px 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 15px;
-    color: #000000 !important;
+    color: #111 !important;
 }
 
 .card * {
-    color: #000000 !important;
+    color: #111 !important;
 }
 
 /* STATUS */
@@ -102,18 +76,21 @@ header {visibility: hidden;}
     padding: 10px 20px;
 }
 
-/* SELECTBOX (CORREÇÃO DO "MENU SUMIDO") */
-div[data-baseweb="select"] * {
-    color: #000000 !important;
-    background-color: #ffffff !important;
+/* ---------------- SELECTBOX (CORREÇÃO DEFINITIVA) ---------------- */
+div[data-baseweb="select"] {
+    background-color: #fff !important;
 }
 
-/* LISTA DROPDOWN */
+div[data-baseweb="select"] span {
+    color: #111 !important;
+}
+
+/* dropdown lista */
 ul, li {
-    color: #000000 !important;
+    color: #111 !important;
 }
 
-/* RELÓGIO */
+/* ---------------- RELÓGIO (CORRIGIDO) ---------------- */
 .watch {
     width: 220px;
     height: 260px;
@@ -124,16 +101,16 @@ ul, li {
 }
 
 .watch-screen {
-    background: black;
+    background: #000;
     border-radius: 20px;
     height: 100%;
-    color: white !important;
     text-align: center;
     padding-top: 20px;
+    color: #fff !important;
 }
 
 .watch-screen * {
-    color: white !important;
+    color: #fff !important;
 }
 
 .watch-time { font-size: 26px; }
@@ -141,7 +118,7 @@ ul, li {
 
 .sos-btn {
     background:#E74C3C;
-    color:white !important;
+    color:#fff !important;
     border-radius:50%;
     width:80px;
     height:80px;
@@ -175,9 +152,6 @@ if "pessoas" not in st.session_state:
 
 if "historico" not in st.session_state:
     st.session_state.historico = []
-
-if "batimentos_historico" not in st.session_state:
-    st.session_state.batimentos_historico = []
 
 # ---------------- DASHBOARD ----------------
 if menu == "Dashboard":
