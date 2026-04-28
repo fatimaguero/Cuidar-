@@ -1,45 +1,68 @@
 import streamlit as st
 import random
 from datetime import datetime
-import time
 import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO ----------------
+# ---------------- ESTILO (CORRIGIDO MOBILE + IOS) ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-html, body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #F4F9F6;
+/* FORÇA TEMA CLARO (resolve iPhone / Safari) */
+:root {
+    color-scheme: light !important;
 }
 
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F4F9F6 !important;
+    color: #000000 !important;
+}
+
+/* força todos textos visíveis */
+h1,h2,h3,h4,h5,h6,p,span,label,div {
+    color: #000000 !important;
+}
+
+/* esconder Streamlit UI */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
+/* layout mobile */
+.block-container {
+    padding: 1rem !important;
+}
+
+/* CARD */
 .card {
-    background: white;
+    background: #ffffff !important;
     padding: 18px;
     border-radius: 18px;
     box-shadow: 0px 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 15px;
 }
 
+.card * {
+    color: #000000 !important;
+}
+
+/* status */
 .status-ok { color:#2ECC71; font-weight:bold; }
 .status-alerta { color:#E74C3C; font-weight:bold; }
 
+/* botão */
 .stButton>button {
     background: linear-gradient(90deg, #2ECC71, #27AE60);
-    color: white;
+    color: white !important;
     border-radius: 20px;
     border: none;
     padding: 10px 20px;
 }
 
-/* relógio */
+/* RELÓGIO */
 .watch {
     width: 220px;
     height: 260px;
@@ -58,6 +81,10 @@ header {visibility: hidden;}
     padding-top: 20px;
 }
 
+.watch-screen * {
+    color: white !important;
+}
+
 .watch-time { font-size: 26px; }
 .watch-status { font-size: 14px; margin:10px 0; }
 
@@ -69,6 +96,7 @@ header {visibility: hidden;}
     height:80px;
     line-height:80px;
     margin:10px auto;
+    font-weight:bold;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -107,7 +135,6 @@ if menu == "Dashboard":
 
     col1, col2 = st.columns([2,1])
 
-    # -------- LISTA --------
     with col1:
         for p in st.session_state.pessoas:
 
@@ -118,7 +145,6 @@ if menu == "Dashboard":
                 <h3>{p['nome']}</h3>
                 <p>Status: <span class='{status_class}'>{p['status']}</span></p>
                 <p>📍 {p['local']}</p>
-
                 <hr>
                 ❤️ {p['batimentos']} bpm |
                 🫁 {p['oxigenacao']}% |
@@ -138,7 +164,6 @@ if menu == "Dashboard":
                 p["calorias"] += random.randint(10, 30)
                 p["sono"] = random.randint(5, 9)
 
-    # -------- RELÓGIO --------
     with col2:
 
         pessoa = st.selectbox("⌚ Dispositivo", [p["nome"] for p in st.session_state.pessoas])
@@ -158,34 +183,28 @@ if menu == "Dashboard":
         """, unsafe_allow_html=True)
 
         if st.button("🚨 Simular SOS"):
-            agora = datetime.now().strftime("%H:%M")
             st.session_state.historico.append({
                 "pessoa": pessoa,
-                "hora": agora,
+                "hora": datetime.now().strftime("%H:%M"),
                 "tipo": "SOS relógio"
             })
-            st.error(f"🚨 Alerta de {pessoa}!")
+            st.error("🚨 Alerta enviado!")
 
-    # -------- GRÁFICO DO AVÔ --------
-    st.markdown("### ❤️ Monitoramento cardíaco (Avô)")
+    # ---------------- GRÁFICO ----------------
+    st.markdown("### ❤️ Batimentos (Avô)")
 
-    avo = next(p for p in st.session_state.pessoas if "Avô" in p["nome"])
-
-    novo_valor = random.randint(60, 100)
-    st.session_state.batimentos_historico.append(novo_valor)
+    novo = random.randint(60, 100)
+    st.session_state.batimentos_historico.append(novo)
 
     if len(st.session_state.batimentos_historico) > 20:
         st.session_state.batimentos_historico.pop(0)
 
-    df = pd.DataFrame(st.session_state.batimentos_historico, columns=["bpm"])
+    st.line_chart(st.session_state.batimentos_historico)
 
-    st.line_chart(df)
-
-    # alerta automático
-    if novo_valor > 100:
-        st.error("⚠️ Batimentos elevados detectados!")
-    elif novo_valor < 60:
-        st.warning("⚠️ Batimentos baixos!")
+    if novo > 100:
+        st.error("⚠️ Batimentos elevados")
+    elif novo < 60:
+        st.warning("⚠️ Batimentos baixos")
 
 # ---------------- MONITORADOS ----------------
 elif menu == "Monitorados":
@@ -200,7 +219,7 @@ elif menu == "Monitorados":
         </div>
         """, unsafe_allow_html=True)
 
-    nome = st.text_input("Adicionar novo")
+    nome = st.text_input("Adicionar pessoa")
 
     if st.button("Adicionar"):
         if nome:
@@ -219,34 +238,28 @@ elif menu == "Monitorados":
 # ---------------- EMERGÊNCIA ----------------
 elif menu == "Emergência":
 
-    st.subheader("🚨 Central de emergência")
+    st.subheader("🚨 Emergência")
 
     pessoa = st.selectbox("Quem precisa de ajuda?", [p["nome"] for p in st.session_state.pessoas])
 
-    if st.button("🚨 ENVIAR ALERTA"):
-        agora = datetime.now().strftime("%H:%M")
-
+    if st.button("ENVIAR ALERTA"):
         st.session_state.historico.append({
             "pessoa": pessoa,
-            "hora": agora,
+            "hora": datetime.now().strftime("%H:%M"),
             "tipo": "SOS manual"
         })
-
-        st.error(f"🚨 Alerta enviado para {pessoa}!")
+        st.error("Alerta enviado!")
 
 # ---------------- HISTÓRICO ----------------
 elif menu == "Histórico":
 
     st.subheader("📊 Histórico")
 
-    if st.session_state.historico:
-        for h in st.session_state.historico[::-1]:
-            st.markdown(f"""
-            <div class='card'>
-                <p><strong>{h['pessoa']}</strong></p>
-                <p>{h['tipo']}</p>
-                <p>{h['hora']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.info("Nenhum evento ainda")
+    for h in st.session_state.historico[::-1]:
+        st.markdown(f"""
+        <div class='card'>
+            <p><strong>{h['pessoa']}</strong></p>
+            <p>{h['tipo']}</p>
+            <p>{h['hora']}</p>
+        </div>
+        """, unsafe_allow_html=True)
