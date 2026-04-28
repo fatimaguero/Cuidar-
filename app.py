@@ -23,9 +23,32 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 
 /* 🔥 CORREÇÃO DEFINITIVA IOS (impede texto sumir) */
-* {
-    color: #000000 !important;
-    -webkit-text-fill-color: #000000 !important;
+/* COR GLOBAL SEGURA (sem quebrar Streamlit) */
+body, p, span, label, h1, h2, h3, h4, h5, h6 {
+    color: #111111 !important;
+    -webkit-text-fill-color: #111111;
+}
+
+/* CONTAINER PRINCIPAL */
+[data-testid="stAppViewContainer"] {
+    background-color: #F4F9F6 !important;
+    color: #111111 !important;
+}
+
+/* SELECTBOX (CORRIGE MENU PRETO INVISÍVEL) */
+div[data-baseweb="select"] * {
+    color: #111111 !important;
+    background-color: #ffffff !important;
+}
+
+/* DROPDOWN LIST */
+ul, li {
+    color: #111111 !important;
+}
+
+/* CARD GARANTIDO LEGÍVEL */
+.card, .card * {
+    color: #111111 !important;
 }
 
 /* CONTAINERS STREAMLIT */
