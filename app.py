@@ -5,7 +5,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO CORRIGIDO (MOBILE + IOS) ----------------
+# ---------------- ESTILO CORRIGIDO (MOBILE + IOS + MENU VISÍVEL) ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -15,19 +15,19 @@ st.markdown("""
     color-scheme: light !important;
 }
 
-/* FUNDO E TEXTO BASE */
+/* FUNDO APP */
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif;
     background-color: #F4F9F6 !important;
     color: #000000 !important;
 }
 
-/* EVITA TEXTO SUMIR NO iOS (REGRA MAIS IMPORTANTE) */
+/* EVITA TEXTO SUMIR NO iOS */
 * {
     -webkit-text-fill-color: unset;
 }
 
-/* FORÇA TODOS TEXTOS VISÍVEIS */
+/* TEXTOS SEMPRE VISÍVEIS */
 h1,h2,h3,h4,h5,h6,p,span,label,div {
     color: #000000 !important;
 }
@@ -37,19 +37,18 @@ h1,h2,h3,h4,h5,h6,p,span,label,div {
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-/* LAYOUT */
+/* LAYOUT MOBILE */
 .block-container {
     padding: 1rem !important;
 }
 
-/* CARD (CORRIGIDO DEFINITIVO) */
+/* CARD */
 .card {
     background: #ffffff !important;
     padding: 18px;
     border-radius: 18px;
     box-shadow: 0px 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 15px;
-
     color: #000000 !important;
 }
 
@@ -106,6 +105,33 @@ header {visibility: hidden;}
     margin:10px auto;
     font-weight:bold;
 }
+
+/* ---------------- CORREÇÃO DO MENU (SUMIU NO CELULAR) ---------------- */
+
+/* força selectbox visível */
+div[data-baseweb="select"] {
+    background-color: #ffffff !important;
+}
+
+div[data-baseweb="select"] * {
+    color: #000000 !important;
+}
+
+/* texto interno do select */
+[data-testid="stSelectbox"] label {
+    color: #000000 !important;
+}
+
+/* lista dropdown */
+li {
+    color: #000000 !important;
+}
+
+/* garante visibilidade total */
+.stSelectbox div, .stSelectbox span {
+    color: #000000 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -115,7 +141,11 @@ st.markdown("""
 <p style='text-align:center; color:#666;'>Monitoramento inteligente para quem você ama ❤️</p>
 """, unsafe_allow_html=True)
 
-menu = st.selectbox("", ["Dashboard", "Monitorados", "Emergência", "Histórico"])
+# MENU (agora corrigido)
+menu = st.selectbox(
+    "",
+    ["Dashboard", "Monitorados", "Emergência", "Histórico"]
+)
 
 # ---------------- BANCO ----------------
 if "pessoas" not in st.session_state:
@@ -198,22 +228,6 @@ if menu == "Dashboard":
             })
             st.error("🚨 Alerta enviado!")
 
-    # ---------------- GRÁFICO ----------------
-    st.markdown("### ❤️ Batimentos (Avô)")
-
-    novo = random.randint(60, 100)
-    st.session_state.batimentos_historico.append(novo)
-
-    if len(st.session_state.batimentos_historico) > 20:
-        st.session_state.batimentos_historico.pop(0)
-
-    st.line_chart(st.session_state.batimentos_historico)
-
-    if novo > 100:
-        st.error("⚠️ Batimentos elevados")
-    elif novo < 60:
-        st.warning("⚠️ Batimentos baixos")
-
 # ---------------- MONITORADOS ----------------
 elif menu == "Monitorados":
 
@@ -226,22 +240,6 @@ elif menu == "Monitorados":
             <p>📍 {p['local']}</p>
         </div>
         """, unsafe_allow_html=True)
-
-    nome = st.text_input("Adicionar pessoa")
-
-    if st.button("Adicionar"):
-        if nome:
-            st.session_state.pessoas.append({
-                "nome": nome,
-                "status": "Tudo bem",
-                "local": "Desconhecido",
-                "batimentos": 70,
-                "oxigenacao": 98,
-                "passos": 0,
-                "calorias": 0,
-                "sono": 7
-            })
-            st.success("Adicionado!")
 
 # ---------------- EMERGÊNCIA ----------------
 elif menu == "Emergência":
