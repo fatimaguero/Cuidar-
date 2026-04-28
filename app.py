@@ -5,55 +5,63 @@ import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO (CORRIGIDO MOBILE + IOS) ----------------
+# ---------------- ESTILO CORRIGIDO (MOBILE + IOS) ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* FORÇA TEMA CLARO (resolve iPhone / Safari) */
+/* FORÇA TEMA CLARO GLOBAL */
 :root {
     color-scheme: light !important;
 }
 
+/* FUNDO E TEXTO BASE */
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif;
     background-color: #F4F9F6 !important;
     color: #000000 !important;
 }
 
-/* força todos textos visíveis */
+/* EVITA TEXTO SUMIR NO iOS (REGRA MAIS IMPORTANTE) */
+* {
+    -webkit-text-fill-color: unset;
+}
+
+/* FORÇA TODOS TEXTOS VISÍVEIS */
 h1,h2,h3,h4,h5,h6,p,span,label,div {
     color: #000000 !important;
 }
 
-/* esconder Streamlit UI */
+/* ESCONDER UI STREAMLIT */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-/* layout mobile */
+/* LAYOUT */
 .block-container {
     padding: 1rem !important;
 }
 
-/* CARD */
+/* CARD (CORRIGIDO DEFINITIVO) */
 .card {
     background: #ffffff !important;
     padding: 18px;
     border-radius: 18px;
     box-shadow: 0px 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 15px;
+
+    color: #000000 !important;
 }
 
 .card * {
     color: #000000 !important;
 }
 
-/* status */
-.status-ok { color:#2ECC71; font-weight:bold; }
-.status-alerta { color:#E74C3C; font-weight:bold; }
+/* STATUS */
+.status-ok { color:#2ECC71 !important; font-weight:bold; }
+.status-alerta { color:#E74C3C !important; font-weight:bold; }
 
-/* botão */
+/* BOTÃO */
 .stButton>button {
     background: linear-gradient(90deg, #2ECC71, #27AE60);
     color: white !important;
