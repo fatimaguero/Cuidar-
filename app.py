@@ -1,11 +1,10 @@
 import streamlit as st
 import random
 from datetime import datetime
-import pandas as pd
 
 st.set_page_config(page_title="Cuidar+", layout="wide")
 
-# ---------------- ESTILO FINAL (CORRIGIDO DE VERDADE) ----------------
+# ---------------- ESTILO FINAL ESTÁVEL ----------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -15,29 +14,24 @@ st.markdown("""
     color-scheme: light !important;
 }
 
-/* FUNDO */
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif;
     background-color: #F4F9F6 !important;
     color: #111 !important;
 }
 
-/* TEXTO GLOBAL SEM QUEBRAR COMPONENTES */
-body, p, span, label, h1, h2, h3, h4, h5, h6 {
+/* 🔥 NÃO USAR "*" GLOBAL (isso quebrava o selectbox) */
+
+/* texto geral seguro */
+p, span, label, h1, h2, h3, h4 {
     color: #111 !important;
 }
 
-/* CONTAINER APP */
-[data-testid="stAppViewContainer"] {
-    background-color: #F4F9F6 !important;
-}
-
-/* ESCONDER UI STREAMLIT */
+/* STREAMLIT UI */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-/* LAYOUT */
 .block-container {
     padding: 1rem !important;
 }
@@ -76,21 +70,28 @@ header {visibility: hidden;}
     padding: 10px 20px;
 }
 
-/* ---------------- SELECTBOX (CORREÇÃO DEFINITIVA) ---------------- */
+/* ---------------- SELECTBOX (CORREÇÃO REAL) ---------------- */
 div[data-baseweb="select"] {
     background-color: #fff !important;
+    border-radius: 10px;
 }
 
-div[data-baseweb="select"] span {
+/* texto dentro do select */
+div[data-baseweb="select"] * {
     color: #111 !important;
 }
 
-/* dropdown lista */
-ul, li {
+/* dropdown aberto (LISTA) */
+ul[role="listbox"] {
+    background: white !important;
     color: #111 !important;
 }
 
-/* ---------------- RELÓGIO (CORRIGIDO) ---------------- */
+li {
+    color: #111 !important;
+}
+
+/* ---------------- RELÓGIO (CORRIGIDO VISUAL) ---------------- */
 .watch {
     width: 220px;
     height: 260px;
@@ -192,7 +193,6 @@ if menu == "Dashboard":
     with col2:
 
         pessoa = st.selectbox("⌚ Dispositivo", [p["nome"] for p in st.session_state.pessoas])
-
         dados = next(p for p in st.session_state.pessoas if p["nome"] == pessoa)
 
         st.markdown(f"""
