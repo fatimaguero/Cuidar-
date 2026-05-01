@@ -173,11 +173,42 @@ elif menu == "Monitorados":
 
     st.markdown("### 👨‍👩‍👧‍👦 Sua família")
 
+    # -------- GARANTE QUE EXISTE A LISTA --------
+    if "pessoas" not in st.session_state:
+        st.session_state.pessoas = []
+
+    # -------- ADICIONAR MEMBRO --------
+    st.markdown("### ➕ Adicionar membro")
+
+    nome = st.text_input("Nome")
+    local = st.text_input("Localização atual", value="Em casa")
+
+    condicao = st.selectbox(
+        "Condição / necessidade",
+        ["Nenhuma", "Idoso", "TEA", "Alzheimer", "Mobilidade reduzida", "Outro"]
+    )
+
+    if st.button("Adicionar"):
+        if nome:
+            st.session_state.pessoas.append({
+                "nome": nome,
+                "local": local,
+                "condicao": condicao
+            })
+            st.success(f"{nome} adicionado!")
+        else:
+            st.warning("Digite o nome")
+
+    # -------- EXIBIR MEMBROS --------
+    st.markdown("---")
+    st.markdown("### 📋 Lista de monitorados")
+
     for p in st.session_state.pessoas:
         st.markdown(f"""
         <div class='card'>
         <h3>{p['nome']}</h3>
         <p>📍 {p['local']}</p>
+        <p>🩺 {p.get('condicao', 'Sem condição informada')}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -220,5 +251,16 @@ elif menu == "Loja":
         st.markdown(f"**{a['nome']}** - {'⭐'*a['nota']}")
         st.write(a["comentario"])
         st.markdown("---")
+# FORMULÁRIO
+    st.subheader("📝 Deixe sua avaliação")
 
+    novo_nome = st.text_input("Seu nome")
+    nova_nota = st.slider("Nota", 1, 5, 5)
+    novo_comentario = st.text_area("Comentário")
+
+    if st.button("Enviar avaliação"):
+        if novo_nome and novo_comentario:
+            st.success("Avaliação enviada! Obrigado 🙌")
+        else:
+            st.warning("Preencha todos os campos")
     
