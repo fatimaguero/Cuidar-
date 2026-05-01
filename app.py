@@ -205,3 +205,20 @@ elif menu == "Loja":
             st.success("Pedido realizado!")
         else:
             st.warning("Preencha os dados")
+
+    # ---------------- AVALIAÇÕES ----------------
+    st.markdown("---")
+    st.subheader("⭐ Avaliações de clientes")
+
+    avaliacoes = [
+        {"nome": "Maria S.", "nota": 5, "comentario": "Me sinto muito mais tranquila acompanhando meu pai."},
+        {"nome": "Carlos R.", "nota": 4, "comentario": "Muito útil, só poderia ter bateria maior."},
+        {"nome": "Ana L.", "nota": 5, "comentario": "Interface simples, perfeito para idosos."}
+    ]
+
+    for a in avaliacoes:
+        st.markdown(f"**{a['nome']}** - {'⭐'*a['nota']}")
+        st.write(a["comentario"])
+        st.markdown("---")
+
+    
